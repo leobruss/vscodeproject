@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <title>Buongiorno</title>
+    </head>
+    <body>
+        <h1>The form element</h1>
+
+        <form action="/registration", method="POST">
+          <label for="fname">Email:</label>
+          <input type="text" id="fname" name="email" required = "required"><br><br>
+          <label for="lname">Codice fiscale:</label>
+          <input type="text" id="lname" name="cf" pattern="^[a-zA-Z]{6}[0-9]{2}[a-zA-Z][0-9]{2}[a-zA-Z][0-9]{3}[a-zA-Z]$"  required = "required"><br><br>
+          <label for="lname">Password:</label>
+          <input type="password" id="lname" name="psw"  required = "required"><br><br>
+          <input type="submit" value="Submit">
+        </form>
+    </body>
+</html>    
