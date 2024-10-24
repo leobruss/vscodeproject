@@ -51,7 +51,6 @@ while iFlag == 0:
         else:
             print("\nerror: " + response.json()["error"]["message"])
 
-    # Richiesta dati cittadino
     elif iOper == 2:
         sArgomento = input(" Rispondi ad una domanda: ")
         

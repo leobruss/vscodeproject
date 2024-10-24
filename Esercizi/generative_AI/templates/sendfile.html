@@ -1,82 +1,215 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <style>
-        body{
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chiedi a Gemini AI</title>
+    <style>
+        /* Reset del margin e padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        * {box-sizing: border-box}
-        input[type=text], input[type=password],input[type=file] {
-        width: 100%;
-        font-size: 28px;
-        padding: 15px;
-        margin: 5px 0 22px 0;
-        display: inline-block;
-        border: none;
-        background: #f1f1f1;
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
         }
-        label{
-        font-size: 15px;
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            max-width: 700px;
+            width: 100%;
+            animation: fadeIn 1s ease-in-out;
         }
-        input[type=text]:focus, input[type=password]:focus {
-        background-color: #ddd;
-        outline: none;
+
+        h1 {
+            text-align: center;
+            color: #ff5c00;
+            font-size: 2.5em;
+            margin-bottom: 20px;
         }
-        hr {
-        border: 1px solid #f1f1f1;
-        margin-bottom: 25px;
+
+        form {
+            display: flex;
+            flex-direction: column;
         }
-        button {
-        font-size: 18px;
-        font-weight: bold;
-        background-color: rgb(10, 119, 13);
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        cursor: pointer;
-        width: 100%;
-        opacity: 0.9;
+
+        label {
+            font-weight: bold;
+            color: #333;
+            margin-top: 15px;
+            font-size: 1.1em;
         }
-        button:hover {
-        opacity:1;
+
+        textarea {
+            padding: 12px;
+            margin-top: 8px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
         }
-        .cancel {
-        padding: 14px 20px;
-        background-color: #ff3d2f;
+
+        /* Stile per l'area di upload drag-and-drop */
+        .drop-area {
+            border: 2px dashed #ff5c00;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+            color: #555;
         }
-        .formContainer {
-        padding: 16px;
+
+        .drop-area.hover {
+            background-color: #f9f9f9;
         }
-        .formContainer p{
-        font-size: 28px;
+
+        input[type="submit"] {
+            margin-top: 20px;
+            padding: 12px;
+            background-color: #ff5c00;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease;
         }
-        </style>
-    <body>
-        <form method="POST" action="mansendfile" enctype="multipart/form-data"> 
-            <div class="formContainer">
-                <h1>Form di invio file al server</h1>
-                <hr>
-                <label for="email"><b>Email</b></label>
-                <input type="text" placeholder="Enter Email" name="email" required>
-                <label for="password"><b>Password</b></label>
-                <input type="password" placeholder="Enter Password" name="password" required>
-            <label>
-                <input type="checkbox" checked="checked" name="remember" style="marginbottom: 15px"> Remember me
-            </label>
-            <p>
-                <label for="file"><b>Scegli file locale</b></label>
-                <input type="file" name="file" id="file" required/>
-                <label for="posizione"><b>Posizione sul server</b></label>
-                <input type="text" placeholder="Inserisci posizione sul server" name="posizione" required>
-            </p>
-            <p>By submitting a file you agree to our <a href="#"
-            style="color:dodgerblue">Terms & Privacy</a><p>
-                <div>
-                    <button type="button" class="cancel">Cancel</button>
-                    <button type="submit" class="signup">Sign Up</button>
-                </div>
-            </div>
-        </form>
-    </body>
+
+        input[type="submit"]:hover {
+            background-color: #e67e00;
+        }
+
+        textarea:focus {
+            border-color: #ff5c00;
+            outline: none;
+        }
+
+        .file-name {
+            margin-top: 5px;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        /* Riquadro aggiuntivo per la risposta */
+        #gemini-response {
+            margin-top: 30px;
+            padding: 12px;
+            background-color: #e1f5fe;
+            border: 2px solid #0288d1;
+            border-radius: 10px;
+            color: #01579b;
+            font-size: 1.2em;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            resize: none;
+        }
+
+        /* Aggiunta di animazioni per rendere il form più vivace */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            input[type="submit"] {
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Chiedi a Gemini AI</h1>
+    <form id="geminiForm" action="mansendfile" method="post" enctype="multipart/form-data" onsubmit="showResponse(event)">
+        <label for="question">La tua domanda:</label>
+        <textarea id="question" name="question" rows="4" placeholder="Scrivi qui la tua domanda per Gemini AI..." required></textarea>
+
+        <label for="file-upload" class="file-upload-label">Scegli un'immagine o trascinala qui:</label>
+        <div class="drop-area" id="drop-area" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+            <p>Trascina qui il tuo file o clicca per selezionarlo</p>
+            <input type="file" id="file-upload" name="image" accept="image/*" onchange="updateFileName()" style="display: none;">
+            <button type="button" onclick="document.getElementById('file-upload').click();" style="background: none; border: none; color: #ff5c00; cursor: pointer; text-decoration: underline;">Seleziona File</button>
+        </div>
+
+        <label for="gemini-response">Risposta di Gemini:</label>
+        <textarea id="gemini-response" name="gemini-response" rows="4" placeholder="La risposta di Gemini apparirà qui..." readonly>{{answer}}</textarea>
+
+        <input type="submit" value="INVIA">
+    </form>
+</div>
+</body>
+<script>
+    // Funzione per gestire l'upload dell'immagine
+    function dropHandler(event) {
+        event.preventDefault();
+        const files = event.dataTransfer.files;
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.type.startsWith('image/')) {
+                const img = document.getElementById('image-preview');
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    img.src = e.target.result;
+                    img.style.display = 'block'; // Mostra l'immagine
+                }
+                reader.readAsDataURL(file);
+            } else {
+                alert("Per favore carica solo un'immagine.");
+            }
+        }
+    }
+
+    function dragOverHandler(event) {
+        event.preventDefault();
+        const dropArea = document.getElementById('drop-area');
+        dropArea.classList.add('hover');
+    }
+
+    // Rimuovi la classe hover quando il mouse esce dall'area di drag
+    function dragLeaveHandler(event) {
+        const dropArea = document.getElementById('drop-area');
+        dropArea.classList.remove('hover');
+    }
+
+    // Aggiornamento del file name (se necessario)
+    function handleFileInput(event) {
+        const file = event.target.files[0];
+        const img = document.getElementById('image-preview');
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                img.src = e.target.result;
+                img.style.display = 'block'; // Mostra l'immagine
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
 </html>
